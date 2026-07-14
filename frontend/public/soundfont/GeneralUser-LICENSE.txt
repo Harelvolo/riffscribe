@@ -1,0 +1,6 @@
+GeneralUser GS 1.471 by S. Christian Collins
+https://schristiancollins.com/generaluser.php
+
+Free for personal and commercial use, redistribution allowed as part of a
+larger project (this soundfont file itself may not be resold standalone).
+Retrieved from https://github.com/bratpeki/soundfonts (SF2/GM/GeneralUser.sf2).

@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg: #0a0908;
+  --surface: #161310;
+  --surface-2: #1e1a14;
+  --border: #332b1c;
+  --text: #b8ac8e;
+  --text-h: #f8f2e2;
+  --accent: #e6c352;
+  --accent-strong: #d4af37;
+  --accent-bg: rgba(212, 175, 55, 0.14);
+  --accent-border: rgba(212, 175, 55, 0.45);
+  --success: #22c55e;
+  --success-bg: rgba(34, 197, 94, 0.14);
+  --danger: #f87171;
+  --shadow: rgba(0, 0, 0, 0.5) 0 10px 25px -8px, rgba(0, 0, 0, 0.35) 0 4px 10px -4px;
+
+  --sans: 'Heebo', system-ui, 'Segoe UI', sans-serif;
+  --heading: 'Heebo', system-ui, 'Segoe UI', sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font: 16px/1.6 var(--sans);
+  color-scheme: dark;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+#root {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 600;
+  color: var(--text-h);
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 14px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--surface-2);
+  color: var(--text-h);
+}
