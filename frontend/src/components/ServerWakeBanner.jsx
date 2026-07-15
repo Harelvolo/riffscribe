@@ -47,7 +47,7 @@ export default function ServerWakeBanner() {
   return (
     <div className="wake-banner">
       <span className="spinner" aria-hidden="true" />
-      Waking up the server - this can take up to a minute on the free tier.
+      Reconnecting to the server...
     </div>
   )
 }
