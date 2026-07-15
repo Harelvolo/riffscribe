@@ -10,6 +10,7 @@ import LegalPanel from './components/LegalPanel'
 import Onboarding from './components/Onboarding'
 import AmbientBackground from './components/AmbientBackground'
 import StatsWidget from './components/StatsWidget'
+import ServerWakeBanner from './components/ServerWakeBanner'
 import { useAuth } from './auth/AuthContext'
 import { apiUrl } from './api'
 import './App.css'
@@ -213,6 +214,7 @@ function App() {
     <>
       <AmbientBackground />
       <StatsWidget />
+      <ServerWakeBanner />
       <div className="app">
         {session && !session.profile.has_seen_onboarding && (
           <Onboarding onComplete={handleOnboardingComplete} />
