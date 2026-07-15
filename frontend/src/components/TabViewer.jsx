@@ -5,6 +5,7 @@ import { jsPDF } from 'jspdf'
 import Icon from './Icon'
 import SignInButton from './SignInButton'
 import { useAuth } from '../auth/AuthContext'
+import { apiUrl } from '../api'
 
 const INSTRUMENTS = {
   classical: { label: 'Classical', program: 24 },
@@ -78,7 +79,7 @@ export default function TabViewer({ alphatex }) {
       player: {
         enablePlayer: true,
         enableCursor: true,
-        soundFont: '/soundfont/GeneralUser.sf2',
+        soundFont: apiUrl('/soundfont/GeneralUser.sf2'),
       },
     })
     apiRef.current = api

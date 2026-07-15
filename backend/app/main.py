@@ -15,6 +15,7 @@ from app.pipeline import composer, key_correction, mixer, separate, synth, tab_m
 from app.pipeline.alphatex_gen import notes_to_alphatex
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+ASSETS_DIR = BASE_DIR / "assets"
 STORAGE_DIR = BASE_DIR / "storage"
 UPLOADS_DIR = STORAGE_DIR / "uploads"
 SEPARATED_DIR = STORAGE_DIR / "separated"
@@ -45,6 +46,9 @@ app.add_middleware(
 )
 
 app.mount("/media", StaticFiles(directory=str(STORAGE_DIR)), name="media")
+# Served from the backend (not bundled into the frontend build) - the .sf2
+# file is ~30MB, over Cloudflare Pages' 25MB per-file static asset limit.
+app.mount("/soundfont", StaticFiles(directory=str(ASSETS_DIR)), name="soundfont")
 
 require_user = auth.require_user_dependency(STORAGE_DIR)
 optional_user = auth.optional_user_dependency(STORAGE_DIR)

@@ -9,6 +9,7 @@ export default defineConfig({
     proxy: {
       '/api': 'http://localhost:8000',
       '/media': 'http://localhost:8000',
+      '/soundfont': 'http://localhost:8000',
     },
   },
 })
