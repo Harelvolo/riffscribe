@@ -31,6 +31,7 @@ export default function SignInButton({ size = 'medium' }) {
         theme="filled_black"
         shape="pill"
         size={size}
+        use_fedcm_for_button={false}
       />
       {error && <p className="error">{error}</p>}
     </div>
