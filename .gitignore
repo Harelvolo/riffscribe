@@ -11,5 +11,7 @@ backend/.pytest_cache/
 frontend/node_modules/
 frontend/dist/
 
+backend/backend-log.txt
+
 .env
 .DS_Store
