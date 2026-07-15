@@ -4,9 +4,8 @@ import os
 import uuid
 from pathlib import Path
 
+import requests
 from fastapi import Header, HTTPException
-from google.auth.transport import requests as google_requests
-from google.oauth2 import id_token
 
 from app import db
 
@@ -24,12 +23,29 @@ def _load_client_id() -> str:
 GOOGLE_CLIENT_ID = _load_client_id()
 
 
-def verify_google_credential(credential: str) -> dict:
-    """Verifies a Google Identity Services credential JWT, returns the user's profile."""
+def verify_google_access_token(access_token: str) -> dict:
+    """Verifies a Google OAuth access token (from the popup sign-in flow) and
+    returns the user's profile. Checks the token's audience against our own
+    client ID first - the userinfo endpoint alone would happily return
+    whoever the token belongs to even if it was issued for a different app.
+    """
     if not GOOGLE_CLIENT_ID:
         raise RuntimeError("GOOGLE_CLIENT_ID is not configured on the server")
 
-    payload = id_token.verify_oauth2_token(credential, google_requests.Request(), GOOGLE_CLIENT_ID)
+    tokeninfo_resp = requests.get(
+        "https://oauth2.googleapis.com/tokeninfo", params={"access_token": access_token}
+    )
+    tokeninfo_resp.raise_for_status()
+    tokeninfo = tokeninfo_resp.json()
+    if GOOGLE_CLIENT_ID not in (tokeninfo.get("aud"), tokeninfo.get("azp")):
+        raise ValueError("Access token was not issued for this application")
+
+    userinfo_resp = requests.get(
+        "https://www.googleapis.com/oauth2/v3/userinfo",
+        headers={"Authorization": f"Bearer {access_token}"},
+    )
+    userinfo_resp.raise_for_status()
+    payload = userinfo_resp.json()
     return {
         "sub": payload["sub"],
         "email": payload.get("email", ""),

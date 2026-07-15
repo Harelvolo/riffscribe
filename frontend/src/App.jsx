@@ -246,7 +246,7 @@ function App() {
               </button>
             </div>
           ) : (
-            <SignInButton size="medium" />
+            <SignInButton />
           )}
         </header>
 

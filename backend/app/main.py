@@ -69,13 +69,13 @@ class GenerateOverTrackRequest(BaseModel):
 
 
 class GoogleAuthRequest(BaseModel):
-    credential: str
+    access_token: str
 
 
 @app.post("/api/auth/google")
 def google_sign_in(req: GoogleAuthRequest):
     try:
-        profile = auth.verify_google_credential(req.credential)
+        profile = auth.verify_google_access_token(req.access_token)
     except Exception as e:
         raise HTTPException(status_code=401, detail=f"Invalid Google credential: {e}")
 

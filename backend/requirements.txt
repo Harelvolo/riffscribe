@@ -9,4 +9,5 @@ demucs==4.0.1
 torchcodec
 basic-pitch==0.4.0
 google-auth
+requests
 pretty_midi==0.2.11
