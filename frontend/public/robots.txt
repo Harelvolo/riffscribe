@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://riffscribe.app/sitemap.xml
