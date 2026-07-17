@@ -174,8 +174,8 @@
   background: var(--accent-bg);
   border: 1px solid var(--accent-border);
   border-radius: 14px;
-  width: 52px;
-  height: 52px;
+  width: 60px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -185,8 +185,8 @@
 }
 
 .app-logo-img {
-  width: 65%;
-  height: 65%;
+  width: 88%;
+  height: 88%;
   object-fit: contain;
 }
 
