@@ -1165,3 +1165,29 @@
 .onboarding-skip:hover {
   color: var(--accent);
 }
+
+/* ---------- identified song badge ---------- */
+
+.identified-song-badge {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--accent-border);
+  background: linear-gradient(120deg, var(--accent-bg), rgba(212, 175, 55, 0.18));
+  color: var(--text);
+  font-size: 13px;
+}
+
+.identified-song-badge strong {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.identified-song-artist {
+  color: var(--text);
+  opacity: 0.8;
+}

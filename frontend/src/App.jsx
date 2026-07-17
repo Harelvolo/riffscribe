@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import WaveformSelector from './components/WaveformSelector'
 import TabViewer from './components/TabViewer'
+import IdentifiedSongBadge from './components/IdentifiedSongBadge'
 import BackingTrackPlayer from './components/BackingTrackPlayer'
 import Library from './components/Library'
 import Icon from './components/Icon'
@@ -44,15 +45,21 @@ function App() {
   const [mode, setMode] = useState(MODES.TRANSCRIBE)
   const [backingInstrument, setBackingInstrument] = useState('classical')
   const [mixedAudioUrl, setMixedAudioUrl] = useState(null)
+  const [identifiedSong, setIdentifiedSong] = useState(null)
 
   useEffect(() => {
     const cached = sessionStorage.getItem(LAST_TAB_KEY)
     if (!cached) return
     try {
-      const { alphatex: cachedAlphatex, mixedAudioUrl: cachedMixedAudioUrl } = JSON.parse(cached)
+      const {
+        alphatex: cachedAlphatex,
+        mixedAudioUrl: cachedMixedAudioUrl,
+        identifiedSong: cachedIdentifiedSong,
+      } = JSON.parse(cached)
       if (cachedAlphatex) {
         setAlphatex(cachedAlphatex)
         setMixedAudioUrl(cachedMixedAudioUrl ?? null)
+        setIdentifiedSong(cachedIdentifiedSong ?? null)
         setStep(STEPS.RESULT)
       }
     } catch {
@@ -83,6 +90,7 @@ function App() {
       if (!res.ok) throw new Error('Upload failed')
       const data = await res.json()
       setAudio({ audioId: data.audio_id, url: data.url, duration: data.duration })
+      setIdentifiedSong(data.identified_song ?? null)
       setLibraryKey((k) => k + 1)
       setStep(STEPS.SELECT)
     } catch (err) {
@@ -96,6 +104,7 @@ function App() {
 
     setError(null)
     setMode(MODES.GENERATE_OVER_TRACK)
+    setIdentifiedSong(null)
     const formData = new FormData()
     formData.append('file', file)
 
@@ -115,6 +124,7 @@ function App() {
     setError(null)
     setMode(MODES.TRANSCRIBE)
     setAudio({ audioId: entry.audio_id, url: entry.url, duration: entry.duration })
+    setIdentifiedSong(entry.identified_title ? { title: entry.identified_title, artist: entry.identified_artist } : null)
     setStep(STEPS.SELECT)
   }
 
@@ -140,7 +150,10 @@ function App() {
       setAlphatex(data.alphatex)
       setMixedAudioUrl(null)
       setStep(STEPS.RESULT)
-      sessionStorage.setItem(LAST_TAB_KEY, JSON.stringify({ tabId: data.tab_id, alphatex: data.alphatex }))
+      sessionStorage.setItem(
+        LAST_TAB_KEY,
+        JSON.stringify({ tabId: data.tab_id, alphatex: data.alphatex, identifiedSong })
+      )
     } catch (err) {
       setError(err.message)
       setStep(STEPS.SELECT)
@@ -182,6 +195,7 @@ function App() {
   const handleGenerateRandomSolo = async () => {
     setIsGenerating(true)
     setError(null)
+    setIdentifiedSong(null)
     try {
       const res = await fetch(apiUrl('/api/generate'), { method: 'POST', headers: authHeaders })
       if (!res.ok) {
@@ -204,6 +218,7 @@ function App() {
     setAudio(null)
     setAlphatex(null)
     setMixedAudioUrl(null)
+    setIdentifiedSong(null)
     setMode(MODES.TRANSCRIBE)
     setError(null)
     setStep(STEPS.UPLOAD)
@@ -347,6 +362,7 @@ function App() {
         {step === STEPS.RESULT && alphatex && (
           <div className="fade-in">
             {mixedAudioUrl && <BackingTrackPlayer audioUrl={mixedAudioUrl} />}
+            <IdentifiedSongBadge song={identifiedSong} />
             <TabViewer alphatex={alphatex} />
             <button type="button" className="secondary-button start-over-button" onClick={handleStartOver}>
               <Icon name="refresh" size={16} />

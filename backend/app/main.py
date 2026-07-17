@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from app import auth, db, library, presence, tabs_store, usage
+from app import auth, db, library, presence, recognize, tabs_store, usage
 from app.pipeline import composer, key_correction, mixer, separate, synth, tab_mapper, transcribe
 from app.pipeline.alphatex_gen import notes_to_alphatex
 
@@ -174,6 +174,7 @@ async def upload_audio(file: UploadFile = File(...), current_user: dict | None =
         )
 
     url = f"{PUBLIC_BASE_URL}/media/uploads/{dest_path.name}"
+    identified_song = recognize.identify_song(str(dest_path))
 
     library.add_entry(
         STORAGE_DIR,
@@ -184,6 +185,7 @@ async def upload_audio(file: UploadFile = File(...), current_user: dict | None =
             "duration": duration,
             "uploaded_at": datetime.now(timezone.utc).isoformat(),
             "owner_sub": current_user["sub"] if current_user else None,
+            "identified_song": identified_song,
         },
     )
 
@@ -191,6 +193,7 @@ async def upload_audio(file: UploadFile = File(...), current_user: dict | None =
         "audio_id": audio_id,
         "url": url,
         "duration": duration,
+        "identified_song": identified_song,
     }
 
 

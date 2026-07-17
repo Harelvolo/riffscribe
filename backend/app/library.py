@@ -6,12 +6,14 @@ from app import db
 
 
 def add_entry(storage_dir: Path, entry: dict) -> None:
+    identified_song = entry.get("identified_song") or {}
     conn = db.connect(storage_dir)
     try:
         conn.execute(
             """
-            INSERT OR REPLACE INTO library (audio_id, filename, url, duration, uploaded_at, owner_sub)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT OR REPLACE INTO library
+                (audio_id, filename, url, duration, uploaded_at, owner_sub, identified_title, identified_artist)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 entry["audio_id"],
@@ -20,6 +22,8 @@ def add_entry(storage_dir: Path, entry: dict) -> None:
                 entry.get("duration"),
                 entry.get("uploaded_at"),
                 entry.get("owner_sub"),
+                identified_song.get("title"),
+                identified_song.get("artist"),
             ),
         )
         conn.commit()

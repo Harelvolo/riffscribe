@@ -34,7 +34,9 @@ CREATE TABLE IF NOT EXISTS library (
     url TEXT,
     duration REAL,
     uploaded_at TEXT,
-    owner_sub TEXT
+    owner_sub TEXT,
+    identified_title TEXT,
+    identified_artist TEXT
 );
 
 CREATE TABLE IF NOT EXISTS tabs (
@@ -66,10 +68,19 @@ def connect(storage_dir: Path) -> sqlite3.Connection:
     return conn
 
 
+def _add_column_if_missing(conn: sqlite3.Connection, table: str, column: str, coltype: str) -> None:
+    existing = {row["name"] for row in conn.execute(f"PRAGMA table_info({table})")}
+    if column not in existing:
+        conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {coltype}")
+
+
 def init_db(storage_dir: Path) -> None:
     conn = connect(storage_dir)
     try:
         conn.executescript(SCHEMA)
+        # Older databases created before these columns existed need migrating in place.
+        _add_column_if_missing(conn, "library", "identified_title", "TEXT")
+        _add_column_if_missing(conn, "library", "identified_artist", "TEXT")
         conn.commit()
     finally:
         conn.close()

@@ -4,6 +4,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     fluidsynth \
     ffmpeg \
     libsndfile1 \
+    libchromaprint-tools \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
