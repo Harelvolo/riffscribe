@@ -184,6 +184,12 @@
   animation: glowPulse 3.5s ease-in-out infinite;
 }
 
+.app-logo-img {
+  width: 65%;
+  height: 65%;
+  object-fit: contain;
+}
+
 @keyframes glowPulse {
   0%, 100% {
     box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.25);

@@ -223,7 +223,7 @@ function App() {
         <header className="app-header fade-in">
           <button type="button" className="app-home-link" onClick={handleStartOver} aria-label="Back to home">
             <span className="app-logo">
-              <Icon name="logo" size={24} />
+              <img src="/logo.png" alt="" className="app-logo-img" />
             </span>
             <div className="app-header-title">
               <h1>Riffscribe</h1>
