@@ -124,7 +124,11 @@ function App() {
     setError(null)
     setMode(MODES.TRANSCRIBE)
     setAudio({ audioId: entry.audio_id, url: entry.url, duration: entry.duration })
-    setIdentifiedSong(entry.identified_title ? { title: entry.identified_title, artist: entry.identified_artist } : null)
+    setIdentifiedSong(
+      entry.identified_title
+        ? { title: entry.identified_title, artist: entry.identified_artist, source: 'acoustid' }
+        : null
+    )
     setStep(STEPS.SELECT)
   }
 
@@ -149,10 +153,11 @@ function App() {
       const data = await res.json()
       setAlphatex(data.alphatex)
       setMixedAudioUrl(null)
+      setIdentifiedSong(data.identified_song ?? null)
       setStep(STEPS.RESULT)
       sessionStorage.setItem(
         LAST_TAB_KEY,
-        JSON.stringify({ tabId: data.tab_id, alphatex: data.alphatex, identifiedSong })
+        JSON.stringify({ tabId: data.tab_id, alphatex: data.alphatex, identifiedSong: data.identified_song ?? null })
       )
     } catch (err) {
       setError(err.message)

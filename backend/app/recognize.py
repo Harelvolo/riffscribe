@@ -32,7 +32,7 @@ def identify_song(audio_path: str) -> dict | None:
         results = acoustid.match(ACOUSTID_API_KEY, audio_path, parse=True, timeout=8)
         for score, _recording_id, title, artist in results:
             if score >= MIN_SCORE and title:
-                return {"title": title, "artist": artist or ""}
+                return {"title": title, "artist": artist or "", "source": "acoustid"}
     except Exception:
         return None
 

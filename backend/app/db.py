@@ -57,6 +57,14 @@ CREATE TABLE IF NOT EXISTS presence (
     client_id TEXT PRIMARY KEY,
     last_seen TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS melody_fingerprints (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    artist TEXT,
+    intervals TEXT NOT NULL,
+    created_at TEXT
+);
 """
 
 

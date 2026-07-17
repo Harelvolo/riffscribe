@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from app import auth, db, library, presence, recognize, tabs_store, usage
+from app import auth, db, library, melody_match, presence, recognize, tabs_store, usage
 from app.pipeline import composer, key_correction, mixer, separate, synth, tab_mapper, transcribe
 from app.pipeline.alphatex_gen import notes_to_alphatex
 
@@ -252,6 +252,21 @@ def process_solo(req: ProcessRequest, request: Request, current_user: dict | Non
 
     alphatex = notes_to_alphatex(positioned_notes, tempo)
 
+    # AcoustID (checked at upload time) only recognizes the exact official
+    # recording. When it didn't match - most likely this is someone's own
+    # cover/practice take - fall back to comparing this transcription's
+    # melody against ones we've already confirmed from other uploads.
+    upload_entry = library.get_entry(STORAGE_DIR, req.audio_id)
+    identified_song = None
+    if upload_entry and upload_entry.get("identified_title"):
+        identified_song = {
+            "title": upload_entry["identified_title"],
+            "artist": upload_entry.get("identified_artist") or "",
+        }
+        melody_match.store_reference(STORAGE_DIR, notes, identified_song["title"], identified_song["artist"])
+    else:
+        identified_song = melody_match.find_match(STORAGE_DIR, notes)
+
     tab_id = uuid.uuid4().hex
     tabs_store.save_entry(
         STORAGE_DIR,
@@ -266,6 +281,7 @@ def process_solo(req: ProcessRequest, request: Request, current_user: dict | Non
             "end": req.end,
             "is_full_mix": req.is_full_mix,
             "owner_sub": caller_sub,
+            "identified_song": identified_song,
             "created_at": datetime.now(timezone.utc).isoformat(),
         },
     )
@@ -275,6 +291,7 @@ def process_solo(req: ProcessRequest, request: Request, current_user: dict | Non
         "alphatex": alphatex,
         "tempo": round(tempo),
         "note_count": len(positioned_notes),
+        "identified_song": identified_song,
     }
 
 

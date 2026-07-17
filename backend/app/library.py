@@ -49,3 +49,12 @@ def owner_of(storage_dir: Path, audio_id: str) -> str | None:
         return row["owner_sub"] if row else None
     finally:
         conn.close()
+
+
+def get_entry(storage_dir: Path, audio_id: str) -> dict | None:
+    conn = db.connect(storage_dir)
+    try:
+        row = conn.execute("SELECT * FROM library WHERE audio_id = ?", (audio_id,)).fetchone()
+        return dict(row) if row else None
+    finally:
+        conn.close()
